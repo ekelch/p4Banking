@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.dto.LoginRequest;
 import com.revature.models.User;
 import com.revature.services.UserService;
 
@@ -17,17 +18,25 @@ import com.revature.services.UserService;
 @CrossOrigin(origins="localhost:4200")
 public class UserController {
 
-	private final UserService userService;
+	private UserService userService;
 	
 	public UserController(UserService userService) {
 		this.userService = userService;
 	}
 	
 	@GetMapping
-	public ResponseEntity<User> getUserByCredentials(@RequestBody String username, @RequestBody String password){
-		System.out.println("hello");
-		Optional<User> user = userService.findByCredentials(username, password);
-		return ResponseEntity.ok(user.get());
+	public ResponseEntity<User> getUserByCredentials(@RequestBody LoginRequest loginRequest) throws Exception{
+		Optional<User> user = userService.findByCredentials(loginRequest.getUsername(), loginRequest.getPassword());
+		if (user.isPresent())
+			return ResponseEntity.ok(user.get());
+		else
+			throw new Exception("not found");
 	}
 	
+	@GetMapping("/test")
+	public void test() throws Exception {
+		User user = userService.findById(1);
+		System.out.println(user);
+	}
+
 }
