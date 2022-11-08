@@ -43,8 +43,8 @@ import lombok.NoArgsConstructor;
 		@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 		@JoinTable(
 				name = "bridge",
-				joinColumns = { @JoinColumn(name="user_id", referencedColumnName = "id", nullable = false, updatable = false)},
-				inverseJoinColumns = { @JoinColumn(name="account_id", referencedColumnName = "id", nullable = false, updatable = false) }
+				joinColumns = { @JoinColumn(name="user_id")},
+				inverseJoinColumns = { @JoinColumn(name="account_id") }
 		)
 		private Set<Account> accounts = new HashSet<Account>();
 	
