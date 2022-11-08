@@ -46,6 +46,6 @@ import lombok.NoArgsConstructor;
 				joinColumns = { @JoinColumn(name="user_id")},
 				inverseJoinColumns = { @JoinColumn(name="account_id") }
 		)
-		private Set<Account> accounts = new HashSet<Account>();
+		private Set<Account> accounts;
 	
 }

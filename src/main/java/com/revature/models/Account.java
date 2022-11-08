@@ -31,6 +31,6 @@ public class Account {
 	private BigDecimal balance;
 	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "accounts")
-	private Set<User> users = new HashSet<User>();
+	private Set<User> users;
 	
 }

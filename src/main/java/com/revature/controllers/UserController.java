@@ -1,7 +1,9 @@
 package com.revature.controllers;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -48,15 +50,18 @@ public class UserController {
 	@PostMapping("/test")
 	public void saveTestUser() {
 		Account account = new Account();
-		account.setBalance(new BigDecimal("3000.00"));
+		account.setBalance(new BigDecimal("4000.00"));
 		
 		User user = new User();
 		user.setFirstName("Gandalf");
 		user.setLastName("The Grey");
-		user.setUsername("gandalf");
+		user.setUsername("wizardman");
 		user.setPassword("pass");
 		user.setPermissionId(2);
-		user.getAccounts().add(account);
+		//user.getAccounts().add(account);
+		Set<Account> accountSet = new HashSet<Account>();
+		accountSet.add(account);
+		user.setAccounts(accountSet);
 		userRepo.save(user);
 		
 	}
