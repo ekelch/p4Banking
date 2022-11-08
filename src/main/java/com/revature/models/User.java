@@ -15,15 +15,19 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 	@Entity
 	@Table(name="users")
 	@AllArgsConstructor
 	@NoArgsConstructor
-	@Data
+	@Getter
+	@Setter
 	public class User{
 
 		@Id
@@ -46,6 +50,7 @@ import lombok.NoArgsConstructor;
 				joinColumns = { @JoinColumn(name="user_id")},
 				inverseJoinColumns = { @JoinColumn(name="account_id") }
 		)
-		private Set<Account> accounts;
+		@JsonManagedReference
+		private Set<Account> accounts = new HashSet<Account>();
 	
 }

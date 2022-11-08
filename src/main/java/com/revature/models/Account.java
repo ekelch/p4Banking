@@ -13,13 +13,17 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name="accounts")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Account {
@@ -31,6 +35,7 @@ public class Account {
 	private BigDecimal balance;
 	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "accounts")
-	private Set<User> users;
+	@JsonBackReference
+	private Set<User> users = new HashSet<User>();
 	
 }

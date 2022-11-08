@@ -42,9 +42,9 @@ public class UserController {
 	}
 	
 	@GetMapping("/test")
-	public void test() throws Exception {
+	public ResponseEntity<User> test() {
 		Optional<User> user = userRepo.findById(6);
-		System.out.println(user.get());
+		return ResponseEntity.ok(user.get());
 	}
 	
 	@PostMapping("/test")
@@ -58,10 +58,7 @@ public class UserController {
 		user.setUsername("wizardman");
 		user.setPassword("pass");
 		user.setPermissionId(2);
-		//user.getAccounts().add(account);
-		Set<Account> accountSet = new HashSet<Account>();
-		accountSet.add(account);
-		user.setAccounts(accountSet);
+		user.getAccounts().add(account);
 		userRepo.save(user);
 		
 	}
