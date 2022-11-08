@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,11 +26,11 @@ public class Account {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int accountId;
+	private Integer id;
 	@Column(name="balance")
 	private BigDecimal balance;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "accounts")
-	private Set<User> users = new HashSet<>();
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "accounts")
+	private Set<User> users = new HashSet<User>();
 	
 }

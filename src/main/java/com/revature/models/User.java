@@ -10,8 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		int userId;
+		Integer id;
 		@Column(name="username")
 		String username;
 		@Column(name="password")
@@ -43,8 +43,8 @@ import lombok.NoArgsConstructor;
 		@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 		@JoinTable(
 				name = "bridge",
-				joinColumns = { @JoinColumn(name="user_id")},
-				inverseJoinColumns = { @JoinColumn(name="account_id") }
+				joinColumns = { @JoinColumn(name="user_id", referencedColumnName = "id", nullable = false, updatable = false)},
+				inverseJoinColumns = { @JoinColumn(name="account_id", referencedColumnName = "id", nullable = false, updatable = false) }
 		)
 		private Set<Account> accounts = new HashSet<Account>();
 	
