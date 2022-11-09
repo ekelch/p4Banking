@@ -1,7 +1,8 @@
 package com.revature.controllers;
 
-import java.math.BigDecimal;
 import java.util.Optional;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.dto.LoginRequest;
-import com.revature.models.Account;
+import com.revature.exceptions.UserNotFoundException;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 import com.revature.services.UserService;
@@ -30,13 +31,12 @@ public class UserController {
 		this.userRepo = userRepo;
 	}
 	
-	@GetMapping
-	public ResponseEntity<User> getUserByCredentials(@RequestBody LoginRequest loginRequest) throws Exception{
-		Optional<User> user = userService.findByCredentials(loginRequest.getUsername(), loginRequest.getPassword());
-		if (user.isPresent())
-			return ResponseEntity.ok(user.get());
-		else
-			throw new Exception("not found");
+	@PostMapping("/login")
+	public ResponseEntity<User> userLogin(@RequestBody LoginRequest loginRequest, HttpSession session) throws Exception{
+		User user = userService.findByCredentials(loginRequest.getUsername(), loginRequest.getPassword());
+		session.setAttribute("user", user);
+		return ResponseEntity.ok(user);
+		
 	}
 	
 	@GetMapping("/test")
@@ -45,19 +45,15 @@ public class UserController {
 		return ResponseEntity.ok(user.get());
 	}
 	
-	@PostMapping("/test")
-	public void saveTestUser() {
-		Account account = new Account();
-		account.setBalance(new BigDecimal("4000.00"));
-		
-		User user = new User();
-		user.setFirstName("Gandalf");
-		user.setLastName("The Grey");
-		user.setUsername("wizardman");
-		user.setPassword("pass");
-		user.setPermissionId(2);
-		user.getAccounts().add(account);
-		userRepo.save(user);
+	@GetMapping
+	public ResponseEntity<User> getUser(HttpSession session) throws UserNotFoundException {
+		Object uncheckedUser = session.getAttribute("user");
+		if (uncheckedUser instanceof User) {
+			User user = (User) uncheckedUser.getClass().cast(uncheckedUser);
+			return ResponseEntity.ok(user);
+		}
+		else
+			throw new UserNotFoundException("User not found");
 		
 	}
 

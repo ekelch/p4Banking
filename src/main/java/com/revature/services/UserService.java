@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.revature.exceptions.UserNotFoundException;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
@@ -16,16 +17,20 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public Optional<User> findByCredentials(String username, String password) {
-		return userRepository.findByUsernameAndPassword(username, password);
+	public User findByCredentials(String username, String password) throws UserNotFoundException {
+		Optional<User> user =  userRepository.findByUsernameAndPassword(username, password);
+		if (user.isPresent())
+			return user.get();
+		else
+			throw new UserNotFoundException("User not found");
 	}
 
-	public User findById(int id) throws Exception {
+	public User findById(int id) throws UserNotFoundException {
 		Optional<User> user = userRepository.findById(id);
 		if (user.isPresent())
 			return user.get();
 		else
-			throw new Exception("User not found");
+			throw new UserNotFoundException("User not found");
 	}
 	
 }
