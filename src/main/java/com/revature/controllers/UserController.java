@@ -2,11 +2,14 @@ package com.revature.controllers;
 
 import java.util.Optional;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +23,14 @@ import com.revature.services.UserService;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin(origins={"http://localhost:8080", "http://localhost:4200"})
+@CrossOrigin(origins={"http://localhost:8080", "http://localhost:4200"}, allowCredentials="true")
 public class UserController {
 
 	private UserService userService;
 	private UserRepository userRepo;
+	
+	@Resource
+	private HttpServletRequest httpServletRequest;
 	
 	public UserController(UserService userService, UserRepository userRepo) {
 		this.userService = userService;
@@ -45,15 +51,12 @@ public class UserController {
 		return ResponseEntity.ok(user.get());
 	}
 	
-	@GetMapping
-	public ResponseEntity<User> getUser(HttpSession session) throws UserNotFoundException {
-		Object uncheckedUser = session.getAttribute("user");
-		if (uncheckedUser instanceof User) {
-			User user = (User) uncheckedUser.getClass().cast(uncheckedUser);
-			return ResponseEntity.ok(user);
-		}
-		else
-			throw new UserNotFoundException("User not found");
+	@GetMapping("/{id}")
+	public ResponseEntity<User> getUser(@PathVariable("id") int id) throws UserNotFoundException {
+		System.out.println(id);
+		User user = userService.findById(id);
+		
+		return ResponseEntity.ok(user);
 		
 	}
 
