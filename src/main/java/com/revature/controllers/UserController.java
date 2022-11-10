@@ -1,9 +1,5 @@
 package com.revature.controllers;
 
-import java.util.Optional;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
@@ -18,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.revature.dto.LoginRequest;
 import com.revature.exceptions.UserNotFoundException;
 import com.revature.models.User;
-import com.revature.repositories.UserRepository;
 import com.revature.services.UserService;
 
 @RestController
@@ -27,14 +22,9 @@ import com.revature.services.UserService;
 public class UserController {
 
 	private UserService userService;
-	private UserRepository userRepo;
 	
-	@Resource
-	private HttpServletRequest httpServletRequest;
-	
-	public UserController(UserService userService, UserRepository userRepo) {
+	public UserController(UserService userService) {
 		this.userService = userService;
-		this.userRepo = userRepo;
 	}
 	
 	@PostMapping("/login")
@@ -44,20 +34,12 @@ public class UserController {
 		return ResponseEntity.ok(user);
 		
 	}
-	
-	@GetMapping("/test")
-	public ResponseEntity<User> test() {
-		Optional<User> user = userRepo.findById(6);
-		return ResponseEntity.ok(user.get());
-	}
+
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<User> getUser(@PathVariable("id") int id) throws UserNotFoundException {
-		System.out.println(id);
-		User user = userService.findById(id);
-		
+		User user = userService.findById(id);		
 		return ResponseEntity.ok(user);
-		
 	}
 
 }
